@@ -18,21 +18,32 @@ const commentRouter = require("./router/comments/commentRouter");
 //call the db
 connectDB();
 //Schedule the task to run at 23:59 on the last day of every month
+// cron.schedule(
+//   "59 23 * * * ",
+//   async () => {
+//     const today = new Date();
+//     const tomorrow = new Date(today);
+//     tomorrow.setDate(tomorrow.getDate() + 1);
+//     if (today.getMonth() !== tomorrow.getMonth()) {
+//       calculateEarnings(); //calc earnings
+//     }
+//   },
+//   {
+//     scheduled: true,
+//     timezone: "America/New_York",
+//   }
+// );
 cron.schedule(
-  "59 23 * * * ",
+  "*/5 * * * *",
   async () => {
-    const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    if (today.getMonth() !== tomorrow.getMonth()) {
-      calculateEarnings(); //calc earnings
-    }
+    calculateEarnings(); // Calculate earnings every 5 minutes
   },
   {
     scheduled: true,
     timezone: "America/New_York",
   }
 );
+
 const app = express();
 //! PORT
 const PORT = 5000;
