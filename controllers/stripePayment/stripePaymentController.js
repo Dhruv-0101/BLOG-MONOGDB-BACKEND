@@ -26,6 +26,17 @@ const stripePaymentController = {
       const paymentIntent = await stripe.paymentIntents.create({
         amount: plan.price * 100,
         currency: "usd",
+        description: "for blogy project",
+        shipping: {
+          name: "Dummy",
+          address: {
+            line1: "510 Townsend St",
+            postal_code: "98140",
+            city: "San Francisco",
+            state: "CA",
+            country: "US",
+          },
+        },
         // add some metadata
         metadata: {
           userId: user?.toString(),
@@ -49,7 +60,7 @@ const stripePaymentController = {
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentId);
     console.log(paymentIntent);
     //! confirm the payment status
-    if (paymentIntent.status !== "success") {
+    if (paymentIntent.status === "succeeded") {
       //!get the data from the metadata
       const metadata = paymentIntent?.metadata;
       const subscriptionPlanId = metadata?.subscriptionPlanId;
