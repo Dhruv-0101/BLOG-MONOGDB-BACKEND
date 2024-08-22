@@ -34,10 +34,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
-    accountVerificationToken: {
-      type: String,
-      default: null,
-    },
     accountVerificationExpires: {
       type: Date,
       default: null,
@@ -77,15 +73,15 @@ const userSchema = new mongoose.Schema(
 );
 //! Generate token for account verification
 userSchema.methods.generateAccVerificationToken = function () {
-  const emailToken = crypto.randomBytes(20).toString("hex");
+  const accountVerificationToken = crypto.randomBytes(20).toString("hex");
   //assign the token to the user
-  this.passwordResetToken = crypto
+  this.accountVerificationToken = crypto
     .createHash("sha256")
-    .update(emailToken)
+    .update(accountVerificationToken)
     .digest("hex");
 
   this.accountVerificationExpires = Date.now() + 10 * 60 * 1000; //10 minutes
-  return emailToken;
+  return accountVerificationToken;
 };
 //! Generate token for password reset
 userSchema.methods.generatePasswordResetToken = function () {
