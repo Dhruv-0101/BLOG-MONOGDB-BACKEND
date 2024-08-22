@@ -6,7 +6,11 @@ const notificationRouter = express.Router();
 
 //-----lists----
 
-notificationRouter.get("/", notificationController.fetchNotifications);
+notificationRouter.get(
+  "/",
+  isAuthenticated,
+  notificationController.fetchNotifications
+);
 
 //----read notification ----
 notificationRouter.put(

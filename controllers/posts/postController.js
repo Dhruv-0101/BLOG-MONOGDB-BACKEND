@@ -8,55 +8,59 @@ const sendNotificatiomMsg = require("../../utils/sendNotificatiomMsg");
 const postController = {
   //!Create post
   createPost: asyncHandler(async (req, res) => {
+    //get the payload
     const { description, category } = req.body;
-
-    // Find the category by ID
+    // find the category
     const categoryFound = await Category.findById(category);
     if (!categoryFound) {
-      return res.status(404).json({ error: "Category not found" });
+      throw new Error("Category not found");
     }
-
-    // Find the user by ID from the request user (assuming req.user contains the user ID)
-    const userFound = await User.findById(req.user._id);
+    // find the user
+    const userFound = await User.findById(req.user);
     if (!userFound) {
-      return res.status(404).json({ error: "User not found" });
+      throw new Error("User not found");
     }
-
-    // Create the post
     const postCreated = await Post.create({
       description,
-      image: req.file, 
+      image: req.file,
       author: req.user,
       category,
     });
-
-    // Push the post ID into the category's posts array and save the category
-    categoryFound.posts.push(postCreated._id);
+    //push the post into category
+    categoryFound.posts.push(categoryFound?._id);
+    //resave the category
     await categoryFound.save();
-
-    // Push the post ID into the user's posts array and save the user
-    userFound.posts.push(postCreated._id);
+    //push the posts into user
+    userFound.posts.push(postCreated?._id);
     await userFound.save();
-
     // Send email to all the user's followers
+    const uniqueFollowers = [...new Set(userFound.followers)]; // Ensure unique followers
+
     await Promise.all(
-      userFound.followers.map(async (followerId) => {
+      uniqueFollowers.map(async (followerId) => {
         // Find the follower by ID
         const follower = await User.findById(followerId);
         if (follower) {
-          // Create notification for the follower
-          await Notification.create({
-            userId: followerId, // Changed to followerId
+          // Check if a notification already exists for this post and follower
+          const existingNotification = await Notification.findOne({
+            userId: followerId,
             postId: postCreated._id,
-            message: `New post created by ${userFound.username}`,
           });
-          // Send email notification
-          sendNotificatiomMsg(follower.email, postCreated._id);
+
+          if (!existingNotification) {
+            // Create notification for the follower if none exists
+            await Notification.create({
+              userId: followerId, // Notification for the follower
+              postId: postCreated._id,
+              message: `New post created by ${userFound.username}`,
+            });
+            // Send email notification
+            sendNotificatiomMsg(follower.email, postCreated._id);
+          }
         }
       })
     );
 
-    // Respond with success message and the created post
     res.json({
       status: "success",
       message: "Post created successfully",

@@ -5,7 +5,10 @@ const mongoose = require("mongoose");
 const notificationController = {
   //!list all notifications
   fetchNotifications: asyncHandler(async (req, res) => {
-    const notifications = await Notification.find();
+    const userId = req.user;
+    const notifications = await Notification.find({
+      userId: userId,
+    });
     res.json(notifications);
   }),
 
