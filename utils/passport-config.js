@@ -68,7 +68,7 @@ passport.use(
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL:
-        "https://blog-monogdb-frontend.vercel.app/api/v1/users/auth/google/callback",
+        "https://blog-monogdb-backend.onrender.com/api/v1/users/auth/google/callback",
     },
     async (accessToken, refreshtoken, profile, done) => {
       try {
