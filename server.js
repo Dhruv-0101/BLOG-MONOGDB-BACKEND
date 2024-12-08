@@ -54,7 +54,6 @@ app.use(express.json()); //Pass json data
 const corsOptions = {
   origin: ["https://blog-monogdb-frontend.vercel.app"],
   credentials: true, // Allow cookies to be sent with requests
-  allowedHeaders: ["Content-Type", "Authorization"], // Allow Authorization header
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed HTTP methods
 };
 app.use(corse(corsOptions));
