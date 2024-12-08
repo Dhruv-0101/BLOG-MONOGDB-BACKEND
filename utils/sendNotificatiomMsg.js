@@ -17,7 +17,7 @@ const sendNotificatiomMsg = async (to, postId) => {
       to,
       subject: "New Post Created",
       html: ` <p>A new post has been created on our site masynchblog</p>
-      <p>Click <a href="http://localhost:5173/posts/${postId}">here</a> to view the post.</p>
+      <p>Click <a href="https://blog-monogdb-frontend.vercel.app/posts/${postId}">here</a> to view the post.</p>
       `,
     };
     //send the email

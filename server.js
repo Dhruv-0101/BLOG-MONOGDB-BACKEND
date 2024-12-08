@@ -52,7 +52,7 @@ const PORT = 5000;
 app.use(express.json()); //Pass json data
 // corse middleware
 const corsOptions = {
-  origin: ["http://localhost:5173"],
+  origin: ["https://blog-monogdb-frontend.vercel.app"],
   credentials: true,
 };
 app.use(corse(corsOptions));

@@ -74,7 +74,9 @@ const userController = {
       (err, user, info) => {
         if (err) return next(err);
         if (!user) {
-          return res.redirect("http://localhost:5173/google-login-error");
+          return res.redirect(
+            "https://blog-monogdb-frontend.vercel.app/google-login-error"
+          );
         }
         //generate the token
 
@@ -89,7 +91,7 @@ const userController = {
           maxAge: 24 * 60 * 60 * 1000, //1 day:
         });
         //redirect the user dashboard
-        res.redirect("http://localhost:5173/dashboard");
+        res.redirect("https://blog-monogdb-frontend.vercel.app/dashboard");
       }
     )(req, res, next);
   }),
