@@ -46,8 +46,8 @@ const userController = {
       //set the token into cookie
       res.cookie("token", token, {
         httpOnly: true,
-        secure: true,
-        sameSite: "None",
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
         maxAge: 24 * 60 * 60 * 1000, //1 day
       });
 
@@ -73,9 +73,10 @@ const userController = {
       },
       (err, user, info) => {
         if (err) return next(err);
+        const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
         if (!user) {
           return res.redirect(
-            "https://blog-monogdb-frontend.vercel.app/google-login-error"
+            `${frontendUrl}/google-login-error`
           );
         }
         //generate the token
@@ -86,12 +87,12 @@ const userController = {
         //set the token into the cooke
         res.cookie("token", token, {
           httpOnly: true,
-          secure: true,
-          sameSite: "None",
+          secure: process.env.NODE_ENV === "production",
+          sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
           maxAge: 24 * 60 * 60 * 1000, //1 day:
         });
         //redirect the user dashboard
-        res.redirect("https://blog-monogdb-frontend.vercel.app");
+        res.redirect(frontendUrl);
       }
     )(req, res, next);
   }),
@@ -120,7 +121,12 @@ const userController = {
   }),
   // ! Logout
   logout: asyncHandler(async (req, res) => {
-    res.cookie("token", "", { maxAge: 1 });
+    res.cookie("token", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+      maxAge: 1,
+    });
     res.status(200).json({ message: "Logout success" });
   }),
   //! Profile

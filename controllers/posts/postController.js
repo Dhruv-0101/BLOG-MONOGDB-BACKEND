@@ -82,6 +82,7 @@ const postController = {
 
     const posts = await Post.find(filter)
       .populate("category")
+      .populate("author")
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit);
@@ -103,12 +104,14 @@ const postController = {
     //check for login user
     const userId = req.user ? req.user : null;
     //find the post
-    const postFound = await Post.findById(postId).populate({
-      path: "comments",
-      populate: {
-        path: "author",
-      },
-    });
+    const postFound = await Post.findById(postId)
+      .populate("author")
+      .populate({
+        path: "comments",
+        populate: {
+          path: "author",
+        },
+      });
     if (!postFound) {
       throw new Error("Post not found");
     }
