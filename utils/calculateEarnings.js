@@ -2,7 +2,7 @@ const Earnings = require("../models/Earning/Earnings");
 const Post = require("../models/Post/Post");
 
 //Rate
-const RATE_PER_VIEW = 0.01;
+const RATE_PER_VIEW = 0.05;
 const calculateEarnings = async () => {
   //get the current date
   const currentDate = new Date();
@@ -30,7 +30,8 @@ const calculateEarnings = async () => {
     post.lastCalculatedViewsCount = post.viewers.length;
     post.nextEarningDate = new Date(
       currentDate.getFullYear(),
-      currentDate.getMonth() + 1
+      currentDate.getMonth() + 1,
+      1
     );
     //Save the record
     await post.save();
