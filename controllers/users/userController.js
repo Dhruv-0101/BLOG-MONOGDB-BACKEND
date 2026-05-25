@@ -73,7 +73,7 @@ const userController = {
       },
       (err, user, info) => {
         if (err) return next(err);
-        const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+        const frontendUrl = process.env.FRONTEND_URL_GOOGLE || "http://localhost:5173";
         if (!user) {
           return res.redirect(
             `${frontendUrl}/google-login-error`
